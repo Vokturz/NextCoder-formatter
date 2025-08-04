@@ -1,13 +1,11 @@
-file_path_prompt = """Analyze the provided code block and its programming language. Based on the code's functionality and common project conventions for that language, suggest a single, plausible file path:
-<file_path>
-parent_folders/file_path.extension
-</file_path>
+system_prompt = """Analyze the provided code block and its programming language. Based on the code's functionality and common project conventions for that language, suggest a single, plausible file path:
+<file_path>parent_folders/file_path.extension</file_path>
+"""
 
-<example>
-<language>
-rust
-</language>
-<code>
+few_shot_examples = [
+    {
+    "role": "user",
+    "content": """```rust
 use std::fs;
 use std::io;
 use std::path::Path;
@@ -16,17 +14,15 @@ use std::path::Path;
 pub fn read_file_to_string<P: AsRef<Path>>(path: P) -> io::Result<String> {
     fs::read_to_string(path)
 }
-</code>
-<file_path>
-data_processor/src/utils/io.rs
-</file_path>
-</example>
-
-<example>
-<language>
-javascript
-</language>
-<code>
+```"""
+    },
+    {
+    "role": "assistant",
+    "content": """<file_path>data_processor/src/utils/io.rs</file_path>"""
+    },
+    {
+    "role": "user",
+    "content": """```jsx
 import React from 'react';
 
 const UserProfileCard = ({ user }) => {
@@ -44,17 +40,15 @@ const UserProfileCard = ({ user }) => {
 };
 
 export default UserProfileCard;
-</code>
-<file_path>
-my-webapp/src/components/UserProfileCard.jsx
-</file_path>
-</example>
-
-<example>
-<language>
-python
-</language>
-<code>
+```"""
+    },
+    {
+    "role": "assistant",
+    "content": """<file_path>src/components/UserProfileCard.js</file_path>"""
+    },
+    {
+    "role": "user",
+    "content": """```python
 import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -68,17 +62,15 @@ engine = create_engine(
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
-</code>
-<file_path>
-data_pipeline/core/db/database_setup.py
-</file_path>
-</example>
-
-example>
-<language>
-java
-</language>
-<code>
+```"""
+    },
+    {
+    "role": "assistant",
+    "content": """<file_path>core/db/database_setup.py<file_path>"""
+    },
+    {
+    "role": "user",
+    "content": """```java
 package com.ecommerce.app.models;
 
 import javax.persistence.Entity;
@@ -96,17 +88,15 @@ public class Product {
 
     // Constructors, getters, and setters omitted for brevity
 }
-</code>
-<file_path>
-online-store-api/src/main/java/com/ecommerce/app/models/Product.java
-</file_path>
-</example>
-
-<example>
-<language>
-cpp
-</language>
-<code>
+```"""
+    },
+    {
+    "role": "assistant",
+    "content": """<file_path>src/main/java/com/ecommerce/app/models/Product.java</file_path>"""
+    },
+    {
+    "role": "user",
+    "content": """```cpp
 #pragma once
 
 #include <vector>
@@ -124,9 +114,11 @@ namespace Engine {
             std::vector<float> buffer_;
     };
 }
-</code>
-<file_path>
-game_engine/include/audio/AudioBuffer.hpp
-</file_path>
-</example>
-"""
+```"""
+    },
+    {
+    "role": "assistant",
+    "content": """<file_path>include/engine/AudioBuffer.hpp</file_path>"""
+    }
+]
+

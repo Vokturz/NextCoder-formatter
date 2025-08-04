@@ -1,7 +1,7 @@
 import re
 import difflib
 from typing import List, Tuple
-from .file_path_prompt import file_path_prompt
+from .file_path_prompt import system_prompt, few_shot_examples
 
 
 def parse_prompt(prompt: str) -> dict:
@@ -111,7 +111,8 @@ def get_code_edit_patches(code_block: str, edited_block: str) -> List[Tuple[str,
 import requests
 import json
 
-def get_file_path(code_block: str, language: str,  model="qwen/qwen3-coder-30b", temperature=0.7, max_tokens=-1, stream=False, base_url="http://localhost:1234", api_key="no-key"):
+def get_file_path(code_block: str, language: str,  model="qwen/qwen3-coder-30b", temperature=0.7, max_tokens=-1, stream=False,
+    base_url="http://localhost:1234", api_key="no-key", print_assistant_message=False):
     url = f"{base_url}/v1/chat/completions"
     
     headers = {
@@ -120,8 +121,9 @@ def get_file_path(code_block: str, language: str,  model="qwen/qwen3-coder-30b",
     }
 
     messages = [
-        {"role": "system", "content": file_path_prompt},
-        {"role": "user", "content": f"<language>\n{language}\n</language>\n<code>\n{code_block}\n</code>"}
+        {"role": "system", "content": system_prompt},
+        *few_shot_examples,
+        {"role": "user", "content": f"```{language}\n{code_block}\n```"}
     ]
     
     data = {
@@ -138,6 +140,9 @@ def get_file_path(code_block: str, language: str,  model="qwen/qwen3-coder-30b",
     resp = response.json()
     assistant_message = resp['choices'][0]['message']['content']
 
-    file_path = next(re.finditer(r"<file_path>\n(.*?)\n</file_path>", assistant_message, re.DOTALL)).group(1)
+    if print_assistant_message:
+        print(assistant_message)
+
+    file_path = next(re.finditer(r"<file_path>(.*?)</file_path>", assistant_message, re.DOTALL)).group(1)
     
     return file_path.strip()
