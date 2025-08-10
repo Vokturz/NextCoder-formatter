@@ -6,7 +6,7 @@ The filenames have been generated using a [AWQ quantized](https://huggingface.co
 python scripts/get_file_names.py --base-url "http://localhost:8000" --model "cpatonn/Qwen3-Coder-30B-A3B-Instruct-AWQ" --output "data/filenames.jsonl"
 ```
 
-# Cleaning the data
+## Cleaning the data
 
 You can check [this notebook](./notebooks/01_clean_dataset.ipynb) for the cleaning process.
 - Some rows contained LLM comments instead of real code
@@ -27,3 +27,14 @@ Final data distribution
 |Java          |13433|
 |Kotlin        |12388|
 |C             |11345|
+
+## Columns
+
+```
+language: (str) - Programming language of the code block.
+code_block: (str) - The code block content.
+file_path: (str) - Generated file path for the code block.
+system_prompt: (str) - System prompt used for generation.
+instruction: (str) - Instructions for code modification.
+completion_code_block: (str) - Final generated code block.
+```

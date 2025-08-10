@@ -7,6 +7,18 @@ import json
 import os
 import concurrent.futures
 
+def parse_code_block(md_code_block: str) -> List[str]:
+    # Extract code block and language (everything between ``` markers)
+    code_pattern = r'```(\w+)?\n(.*?)```'
+    code_match = re.search(code_pattern, md_code_block, re.DOTALL)
+    language = code_match.group(1) if code_match and code_match.group(1) else ""
+    code_block = code_match.group(2).strip() if code_match else ""
+    
+    return {
+        'code_block': code_block,
+        'language': language
+    }
+
 def parse_prompt(prompt: str) -> dict:
     """
     Parse a prompt to extract the initial part, instruction, and code block.
@@ -26,11 +38,9 @@ def parse_prompt(prompt: str) -> dict:
     instruction_match = re.search(instruction_pattern, prompt, re.DOTALL)
     instruction = instruction_match.group(1).strip() if instruction_match else ""
     
-    # Extract code block and language (everything between ``` markers)
-    code_pattern = r'```(\w+)?\n(.*?)```'
-    code_match = re.search(code_pattern, prompt, re.DOTALL)
-    language = code_match.group(1) if code_match and code_match.group(1) else ""
-    code_block = code_match.group(2).strip() if code_match else ""
+    parsed_code_block = parse_code_block(prompt)
+    code_block = parsed_code_block['code_block']
+    language = parsed_code_block['language']
     
     return {
         'initial_part': initial_part,
@@ -38,6 +48,7 @@ def parse_prompt(prompt: str) -> dict:
         'code_block': code_block,
         'language': language
     }
+
 
 
 
