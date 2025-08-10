@@ -11,22 +11,26 @@ python scripts/get_file_names.py --base-url "http://localhost:8000" --model "cpa
 You can check [this notebook](./notebooks/01_clean_dataset.ipynb) for the cleaning process.
 - Some rows contained LLM comments instead of real code
 - Some rows had inconsistencies between the language and the code block
-- (NEW) Some rows had completions with more than one code block
+- Some rows had completions with more than one code block
+- Some rows had invalid code blocks. We used tree-sitter to validate them
 
-> A total of ~14484~ 27005 rows were removed from the dataset.
+> A total of 67038 rows were removed from the dataset.
 
-Final data distribution
+### Final data distribution
 
 |language    |unique count |
 |--------------|-------|
-|C++           |17415|
-|Javascript    |14753|
-|Python        |14738|
-|Go            |14359|
-|Rust          |13552|
-|Java          |13433|
-|Kotlin        |12388|
-|C             |11345|
+|C++           |14621|
+|Python        |13969|
+|Javascript    |13541|
+|Rust          |13010|
+|Java          |12129|
+|Go            |11269|
+|Kotlin        |10738|
+|C             | 9711|
+
+- **Total Unique Code Blocks**: 98998
+- **Total Examples**: 314085
 
 ## Columns
 
